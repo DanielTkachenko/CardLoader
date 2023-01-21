@@ -267,4 +267,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d5bea957f213241b7263210196e376, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faceImage: {fileID: 6906328496397655779}
+  _faceImage: {fileID: 6906328496397655779}
+  _backImageGameObject: {fileID: 1105534583891725068}
