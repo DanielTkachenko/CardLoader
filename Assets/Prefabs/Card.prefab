@@ -270,3 +270,4 @@ MonoBehaviour:
   _faceImage: {fileID: 6906328496397655779}
   _backImageGameObject: {fileID: 1105534583891725068}
   _animationTime: 0.5
+  _openAnimation: 1

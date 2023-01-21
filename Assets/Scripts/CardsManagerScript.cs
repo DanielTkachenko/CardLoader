@@ -11,12 +11,10 @@ public class CardsManagerScript : MonoBehaviour
     [SerializeField] private string _uri = "https://picsum.photos/1024";
     [SerializeField] private float _waitingTime = 1.5f;
     private List<Card> _cards;
-
     private LoadMode _loadMode;
     
     void Start()
     {
-        _loadMode = LoadMode.OneByOne;
         _cards = new List<Card>();
         foreach (var item in GetComponentsInChildren<Card>())
         {
@@ -152,5 +150,14 @@ public class CardsManagerScript : MonoBehaviour
     public void SetLoadMode(int v)
     {
         _loadMode = (LoadMode)v;
+    }
+
+    /// <summary>
+    /// Cancels images loading
+    /// </summary>
+    public void CancelLoading()
+    {
+        StopAllCoroutines();
+        StartCoroutine(FlipBack(0));
     }
 }
