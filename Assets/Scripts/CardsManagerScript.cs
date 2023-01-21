@@ -24,6 +24,21 @@ public class CardsManagerScript : MonoBehaviour
         }
     }
 
+    private bool AllUp()
+    {
+        bool allUp = true;
+        foreach (var card in _cards)
+        {
+            if (!card.bFaceUp)
+            {
+                allUp = false;
+                break;
+            }
+        }
+
+        return allUp;
+    }
+
     /// <summary>
     /// Loads and opens cards according to loading mode
     /// </summary>
@@ -41,6 +56,7 @@ public class CardsManagerScript : MonoBehaviour
                 break;
             case LoadMode.WhenReady:
                 //when ready loading
+                StartCoroutine(WhenReadyLoading());
                 break;
         }
     }
@@ -59,6 +75,13 @@ public class CardsManagerScript : MonoBehaviour
         card.SetFaceImage(tex);
     }
 
+    private IEnumerator LoadWhenReady(string uri, Card card)
+    {
+        
+        yield return LoadImage(uri, card);
+        StartCoroutine(card.Flip());
+    }
+
     /// <summary>
     /// Loads and opens Cards one by one
     /// </summary>
@@ -70,8 +93,7 @@ public class CardsManagerScript : MonoBehaviour
             yield return LoadImage(_uri, card);
             yield return card.Flip();
         }
-        yield return new WaitForSeconds(_waitingTime);
-        FlipBack();
+        StartCoroutine(FlipBack(_waitingTime));
     }
 
     /// <summary>
@@ -88,21 +110,38 @@ public class CardsManagerScript : MonoBehaviour
         {
             StartCoroutine(card.Flip());
         }
-        yield return new WaitForSeconds(_waitingTime);
-        FlipBack();
+        StartCoroutine(FlipBack(_waitingTime));
     }
 
     /// <summary>
-    /// Flips all cards to back side
+    /// Opens images when they are loaded
     /// </summary>
-    private void FlipBack()
+    /// <returns></returns>
+    private IEnumerator WhenReadyLoading()
     {
         foreach (var card in _cards)
         {
-            if (card.bFaceUp)
-            {
+            StartCoroutine(LoadWhenReady(_uri, card));
+        }
+        while (!AllUp())
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        StartCoroutine(FlipBack(_waitingTime));
+    }
+
+    /// <summary>
+    /// Flips all cards to backside in some period of time
+    /// </summary>
+    /// <param name="timeToWait">time period</param>
+    /// <returns></returns>
+    private IEnumerator FlipBack(float timeToWait)
+    {
+        yield return new WaitForSeconds(timeToWait);
+        foreach (var card in _cards)
+        {
+            if(card.bFaceUp)
                 StartCoroutine(card.Flip());
-            }
         }
     }
 

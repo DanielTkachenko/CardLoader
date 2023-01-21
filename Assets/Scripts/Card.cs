@@ -9,6 +9,7 @@ public class Card : MonoBehaviour
 
     [SerializeField] private SpriteRenderer _faceImage;
     [SerializeField] private GameObject _backImageGameObject;
+    [SerializeField] private float _animationTime;
     
     void Start()
     {
@@ -33,12 +34,12 @@ public class Card : MonoBehaviour
     /// <returns></returns>
     public IEnumerator Flip()
     {
+        bFaceUp = !bFaceUp;
         //animation
-        Tween tween = transform.DORotate(Vector3.up * 90, 0.5f);
+        Tween tween = transform.DORotate(Vector3.up * 90, 0.5f * _animationTime);
         yield return tween.WaitForKill();
         _backImageGameObject.SetActive(!_backImageGameObject.activeSelf);
-        tween = transform.DORotate(Vector3.zero, 0.5f);
+        tween = transform.DORotate(Vector3.zero, 0.5f * _animationTime);
         yield return tween.WaitForKill();
-        bFaceUp = !bFaceUp;
     }
 }
