@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 511bf663e1587e445959cbfc7e4d2361, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -270,4 +270,4 @@ MonoBehaviour:
   _faceImage: {fileID: 6906328496397655779}
   _backImageGameObject: {fileID: 1105534583891725068}
   _animationTime: 0.6
-  _openAnimation: 1
+  _openAnimation: 0
