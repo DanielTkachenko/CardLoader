@@ -32,12 +32,13 @@ public class Card : MonoBehaviour
     }
 
     /// <summary>
-    /// Flips card to the opposite side
+    /// Flips the card to the side
     /// </summary>
+    /// <param name="faceUp">if true then flip face up, else backside up</param>
     /// <returns></returns>
-    public IEnumerator Flip()
+    public IEnumerator Flip(bool faceUp)
     {
-        bFaceUp = !bFaceUp;
+        bFaceUp = faceUp;
         //animation
         Tween tween;
         if (_openAnimation == OpenAnimation.HorizontalFlip)
@@ -50,7 +51,7 @@ public class Card : MonoBehaviour
             tween = transform.DORotate(Vector3.right * 90, 0.5f * _animationTime);
             yield return tween.WaitForKill();
         }
-        _backImageGameObject.SetActive(!_backImageGameObject.activeSelf);
+        _backImageGameObject.SetActive(!faceUp);
         tween = transform.DORotate(Vector3.zero, 0.5f * _animationTime);
         yield return tween.WaitForKill();
     }

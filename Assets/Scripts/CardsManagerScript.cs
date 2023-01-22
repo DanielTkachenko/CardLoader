@@ -12,9 +12,11 @@ public class CardsManagerScript : MonoBehaviour
     [SerializeField] private float _waitingTime = 1.5f;
     private List<Card> _cards;
     private LoadMode _loadMode;
+    private bool bLoadInProcess;
     
     void Start()
     {
+        bLoadInProcess = false;
         _cards = new List<Card>();
         foreach (var item in GetComponentsInChildren<Card>())
         {
@@ -38,24 +40,37 @@ public class CardsManagerScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads and opens cards according to loading mode
+    /// Starts the FlipCardsCorutine function
     /// </summary>
     public void FlipCards()
     {
-        switch (_loadMode)
+        StartCoroutine(FlipCardsCorutine());
+    }
+    
+    /// <summary>
+    /// Loads and opens cards according to loading mode
+    /// </summary>
+    private IEnumerator FlipCardsCorutine()
+    {
+        if (!bLoadInProcess)
         {
-            case LoadMode.OneByOne:
-                //one by one loading
-                StartCoroutine(OneByOneLoading());
-                break;
-            case LoadMode.AllAtOnce:
-                //all at once loading
-                StartCoroutine(AllAtOnceLoading());
-                break;
-            case LoadMode.WhenReady:
-                //when ready loading
-                StartCoroutine(WhenReadyLoading());
-                break;
+            bLoadInProcess = true;
+            switch (_loadMode)
+            {
+                case LoadMode.OneByOne:
+                    //one by one loading
+                    yield return OneByOneLoading();
+                    break;
+                case LoadMode.AllAtOnce:
+                    //all at once loading
+                    yield return AllAtOnceLoading();
+                    break;
+                case LoadMode.WhenReady:
+                    //when ready loading
+                    yield return WhenReadyLoading();
+                    break;
+            }
+            bLoadInProcess = false;
         }
     }
 
@@ -77,7 +92,7 @@ public class CardsManagerScript : MonoBehaviour
     {
         
         yield return LoadImage(uri, card);
-        StartCoroutine(card.Flip());
+        StartCoroutine(card.Flip(true));
     }
 
     /// <summary>
@@ -89,7 +104,7 @@ public class CardsManagerScript : MonoBehaviour
         foreach (var card in _cards)
         {
             yield return LoadImage(_uri, card);
-            yield return card.Flip();
+            yield return card.Flip(true);
         }
         StartCoroutine(FlipBack(_waitingTime));
     }
@@ -106,7 +121,7 @@ public class CardsManagerScript : MonoBehaviour
         }
         foreach (var card in _cards)
         {
-            StartCoroutine(card.Flip());
+            StartCoroutine(card.Flip(true));
         }
         StartCoroutine(FlipBack(_waitingTime));
     }
@@ -138,8 +153,8 @@ public class CardsManagerScript : MonoBehaviour
         yield return new WaitForSeconds(timeToWait);
         foreach (var card in _cards)
         {
-            if(card.bFaceUp)
-                StartCoroutine(card.Flip());
+            if (card.bFaceUp)
+                StartCoroutine(card.Flip(false));
         }
     }
 
